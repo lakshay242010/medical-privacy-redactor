@@ -2,96 +2,86 @@ import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title="SupplyGuard AI - Risk Forecaster", page_icon="📦", layout="wide"
+    page_title="SprintSync AI - Multi-Agent Manager", page_icon="🤖", layout="wide"
 )
 
-st.title(
-    "📦 SupplyGuard AI: Small Business Supply Chain Risk & Disruption"
-    " Forecaster"
-)
+st.title("🤖 SprintSync AI: Multiplayer AI Sprint & Architecture Manager")
 st.write(
-    "Predict shipping delays 14 days in advance and analyze vendor bottlenecks"
-    " with AI-driven risk forecasting."
+    "A collaborative multi-agent dashboard where autonomous agents parse"
+    " chats, manage task tickets, and resolve technical conflicts."
 )
 
-# Sidebar parameters for simulation
-st.sidebar.header("📊 Forecasting Parameters")
-shipping_mode = st.sidebar.selectbox(
-    "Shipping Mode", ["Standard Class", "Second Class", "First Class", "Same Day"]
+# Sidebar inputs for team simulation
+st.sidebar.header("🛠️ Sprint Control Panel")
+team_role = st.sidebar.selectbox(
+    "Active Agent Persona",
+    ["PM Agent (Product)", "QA Agent (Quality)", "Architect Agent (Tech)"],
 )
-lead_time_days = st.sidebar.slider(
-    "Average Vendor Lead Time (Days)", 3, 30, 12
+sprint_input = st.sidebar.text_area(
+    "Paste Meeting Notes / Chat Log:",
+    "Need to build user login by Tuesday. Also fix database connection bug"
+    " reported by QA.",
 )
 
-# Mock data for supply chain records
-data = [
+# Active sprint tasks data
+tasks_data = [
     {
-        "Supplier": "Apex Logistics Inc.",
-        "Region": "North America",
-        "Item": "Microchips A-1",
-        "Current Status": "In Transit",
-        "Delay Risk": "High (78%)",
-        "Lead Time": "14 Days",
+        "Task ID": "TSK-101",
+        "Description": "Implement OAuth2 Login flow",
+        "Priority": "High",
+        "Assigned Agent": "Architect Agent",
+        "Status": "In Progress",
     },
     {
-        "Supplier": "Global Freight Ltd.",
-        "Region": "Europe",
-        "Item": "Battery Pack B-2",
-        "Current Status": "Delayed at Port",
-        "Delay Risk": "Critical (91%)",
-        "Lead Time": "21 Days",
+        "Task ID": "TSK-102",
+        "Description": "Fix DB timeout error on high load",
+        "Priority": "Critical",
+        "Assigned Agent": "QA Agent",
+        "Status": "Conflict Flagged",
     },
     {
-        "Supplier": "SwiftShip Co.",
-        "Region": "Asia-Pacific",
-        "Item": "Display Panels C-3",
-        "Current Status": "On Schedule",
-        "Delay Risk": "Low (12%)",
-        "Lead Time": "5 Days",
-    },
-    {
-        "Supplier": "Nordic Supply Chain",
-        "Region": "Europe",
-        "Item": "Cables & Connectors",
-        "Current Status": "In Transit",
-        "Delay Risk": "Medium (45%)",
-        "Lead Time": "9 Days",
+        "Task ID": "TSK-103",
+        "Description": "Update API documentation",
+        "Priority": "Medium",
+        "Assigned Agent": "PM Agent",
+        "Status": "Pending",
     },
 ]
 
-df = pd.DataFrame(data)
+df = pd.DataFrame(tasks_data)
 
 st.markdown("---")
-st.subheader("🌐 Active Vendor Risk Dashboard")
+st.subheader("📋 Active Sprint Task Board")
 st.dataframe(df, use_container_width=True)
 
-# Risk Analysis & Mitigation Section
+# Multi-Agent Event Stream & Conflict Resolution
 st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-  st.subheader("📈 14-Day Disruption Probability")
-  st.progress(
-      0.78, text="Predicted Bottleneck Severity: 78% (High Port Risk)"
-  )
-  st.progress(
-      0.45, text="Inventory Stockout Vulnerability: 45% across active SKUs"
+  st.subheader("⚡ Multi-Agent Event Stream")
+  st.info("🤖 **PM Agent:** Parsed 3 new action items from chat logs.")
+  st.success("🤖 **Architect Agent:** Verified database schema compatibility.")
+  st.warning(
+      "🤖 **QA Agent:** Flagged overlapping requirement in TSK-102 and"
+      " TSK-104."
   )
 
 with col2:
-  st.subheader("🤖 AI Mitigation Recommendations")
-  st.success(
-      "✅ **Action 1:** Reroute Microchips A-1 through alternative secondary"
-      " carrier."
+  st.subheader("🚨 Automated Conflict Resolution")
+  st.error(
+      "⚠️ **Conflict Detected:** Task TSK-102 contradicts authentication"
+      " constraints in PRD section 4.2."
   )
-  st.info(
-      "ℹ️ **Action 2:** Re-order Battery Pack B-2 5 days early to absorb"
-      " regional transit delays."
-  )
+  if st.button("Resolve Conflict via AI Agent"):
+    st.success(
+        "✅ Conflict automatically resolved: Updated PRD specs and"
+        " reprioritized task."
+    )
 
 # Footer Disclaimer
 st.markdown("---")
 st.caption(
-    "⚠️ **Logistics AI Disclaimer:** Forecasts are generated using predictive"
-    " risk modeling for educational demonstration."
+    "⚠️ **AI Dev Tool Disclaimer:** Simulated multi-agent coordination"
+    " platform for educational demonstration."
 )
