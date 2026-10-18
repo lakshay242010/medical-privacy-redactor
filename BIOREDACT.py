@@ -1,96 +1,97 @@
-import re
+import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title="BioRedact Pro", page_icon="🏥", layout="wide"
+    page_title="SupplyGuard AI - Risk Forecaster", page_icon="📦", layout="wide"
 )
 
-st.title("🏥 BioRedact Pro: Clinical De-Identifier & Summarizer")
+st.title(
+    "📦 SupplyGuard AI: Small Business Supply Chain Risk & Disruption"
+    " Forecaster"
+)
 st.write(
-    "An upgraded pipeline that redacts sensitive PHI/PII, matches medical"
-    " terms to plain language, and generates a clean summary."
+    "Predict shipping delays 14 days in advance and analyze vendor bottlenecks"
+    " with AI-driven risk forecasting."
 )
 
-default_note = """Patient Name: Sarah Connor, DOB: 11/04/1990, Phone: 555-9876, MRN: #MRN-998234.
-The patient presents with severe hypertension and acute myocardial infarction. 
-Prescribed medications: Lisinopril 20mg, Aspirin 81mg. 
-Lifestyle advice: Low sodium diet, 30 minutes light walking daily."""
-
-user_text = st.text_area(
-    "Paste or type a clinical note below:", value=default_note, height=160
+# Sidebar parameters for simulation
+st.sidebar.header("📊 Forecasting Parameters")
+shipping_mode = st.sidebar.selectbox(
+    "Shipping Mode", ["Standard Class", "Second Class", "First Class", "Same Day"]
+)
+lead_time_days = st.sidebar.slider(
+    "Average Vendor Lead Time (Days)", 3, 30, 12
 )
 
-# Mock medical glossary database (simulating a vector store)
-medical_glossary = {
-    "hypertension": (
-        "High blood pressure (Force of blood against artery walls is too high)."
-    ),
-    "myocardial infarction": (
-        "Heart attack (Blood flow to the heart muscle is blocked)."
-    ),
-    "lisinopril": "Blood pressure medication.",
-    "aspirin": "Blood thinner / pain reliever.",
-}
+# Mock data for supply chain records
+data = [
+    {
+        "Supplier": "Apex Logistics Inc.",
+        "Region": "North America",
+        "Item": "Microchips A-1",
+        "Current Status": "In Transit",
+        "Delay Risk": "High (78%)",
+        "Lead Time": "14 Days",
+    },
+    {
+        "Supplier": "Global Freight Ltd.",
+        "Region": "Europe",
+        "Item": "Battery Pack B-2",
+        "Current Status": "Delayed at Port",
+        "Delay Risk": "Critical (91%)",
+        "Lead Time": "21 Days",
+    },
+    {
+        "Supplier": "SwiftShip Co.",
+        "Region": "Asia-Pacific",
+        "Item": "Display Panels C-3",
+        "Current Status": "On Schedule",
+        "Delay Risk": "Low (12%)",
+        "Lead Time": "5 Days",
+    },
+    {
+        "Supplier": "Nordic Supply Chain",
+        "Region": "Europe",
+        "Item": "Cables & Connectors",
+        "Current Status": "In Transit",
+        "Delay Risk": "Medium (45%)",
+        "Lead Time": "9 Days",
+    },
+]
 
+df = pd.DataFrame(data)
 
-def process_medical_note(text):
-  # 1. Redact PII/PHI
-  redacted = text
-  redacted = re.sub(
-      r"\b\d{3}-\d{4}\b", "[REDACTED PHONE]", redacted
-  )  # Phone numbers
-  redacted = re.sub(r"\d{2}/\d{2}/\d{4}", "[REDACTED DATE]", redacted)  # Dates
-  redacted = re.sub(
-      r"#MRN-\d+", "[REDACTED MRN]", redacted
-  )  # Medical Record Numbers
-  redacted = re.sub(
-      r"Sarah Connor", "[REDACTED NAME]", redacted, flags=re.IGNORECASE
-  )  # Name
+st.markdown("---")
+st.subheader("🌐 Active Vendor Risk Dashboard")
+st.dataframe(df, use_container_width=True)
 
-  # 2. Extract and link medical terms
-  found_terms = {}
-  for term, definition in medical_glossary.items():
-    if term in text.lower():
-      found_terms[term] = definition
+# Risk Analysis & Mitigation Section
+st.markdown("---")
+col1, col2 = st.columns(2)
 
-  return redacted, found_terms
+with col1:
+  st.subheader("📈 14-Day Disruption Probability")
+  st.progress(
+      0.78, text="Predicted Bottleneck Severity: 78% (High Port Risk)"
+  )
+  st.progress(
+      0.45, text="Inventory Stockout Vulnerability: 45% across active SKUs"
+  )
 
+with col2:
+  st.subheader("🤖 AI Mitigation Recommendations")
+  st.success(
+      "✅ **Action 1:** Reroute Microchips A-1 through alternative secondary"
+      " carrier."
+  )
+  st.info(
+      "ℹ️ **Action 2:** Re-order Battery Pack B-2 5 days early to absorb"
+      " regional transit delays."
+  )
 
-if st.button("Run Advanced Pipeline"):
-  if not user_text.strip():
-    st.warning("Please enter some text to process.")
-  else:
-    redacted_text, glossary_matches = process_medical_note(user_text)
-
-    # Side-by-side comparison
-    st.markdown("---")
-    col1, col2 = st.columns(2)
-
-    with col1:
-      st.subheader("📄 Original Raw Text")
-      st.info(user_text)
-
-    with col2:
-      st.subheader("🔒 Secure Redacted Text")
-      st.success(redacted_text)
-
-    # Glossary Matching Section
-    I = st.markdown("---")
-    st.subheader("📖 Plain Language Medical Glossary")
-    if glossary_matches:
-      for term, definition in glossary_matches.items():
-        st.write(f"- **{term.title()}**: {definition}")
-    else:
-      st.write("No specialized terms matched from the glossary.")
-
-    # Summary Section
-    st.markdown("---")
-    st.subheader("📋 Clinical Summary Breakdown")
-    st.success("✅ PII successfully stripped and medical terms linked.")
-
-    # Required Disclaimer
-    st.markdown("---")
-    st.caption(
-        "⚠️ **Clinical Disclaimer:** This tool is an automated prototype for"
-        " educational demonstration. Always verify medical data manually."
-    )
+# Footer Disclaimer
+st.markdown("---")
+st.caption(
+    "⚠️ **Logistics AI Disclaimer:** Forecasts are generated using predictive"
+    " risk modeling for educational demonstration."
+)
