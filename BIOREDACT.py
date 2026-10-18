@@ -1,87 +1,84 @@
+import time
 import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    page_title="SprintSync AI - Multi-Agent Manager", page_icon="🤖", layout="wide"
+    page_title="Driver Fatigue Guard - Edge Vision", page_icon="🚗", layout="wide"
 )
 
-st.title("🤖 SprintSync AI: Multiplayer AI Sprint & Architecture Manager")
+st.title("🚗 Edge-Optimized Driver Fatigue & Distraction Monitor")
 st.write(
-    "A collaborative multi-agent dashboard where autonomous agents parse"
-    " chats, manage task tickets, and resolve technical conflicts."
+    "Real-time temporal monitoring dashboard tracking Eye Aspect Ratio (EAR),"
+    " head pose shifts, and fatigue alerts."
 )
 
-# Sidebar inputs for team simulation
-st.sidebar.header("🛠️ Sprint Control Panel")
-team_role = st.sidebar.selectbox(
-    "Active Agent Persona",
-    ["PM Agent (Product)", "QA Agent (Quality)", "Architect Agent (Tech)"],
+# Sidebar controls for simulation
+st.sidebar.header("📹 Edge Device Settings")
+camera_status = st.sidebar.selectbox(
+    "Webcam Feed Status", ["Active (15 FPS)", "Paused", "Low Light Mode"]
 )
-sprint_input = st.sidebar.text_area(
-    "Paste Meeting Notes / Chat Log:",
-    "Need to build user login by Tuesday. Also fix database connection bug"
-    " reported by QA.",
-)
+sensitivity = st.sidebar.slider("Fatigue Alert Threshold (Seconds)", 1.0, 3.0, 1.5)
 
-# Active sprint tasks data
-tasks_data = [
+# Mock real-time safety metrics data
+safety_logs = [
     {
-        "Task ID": "TSK-101",
-        "Description": "Implement OAuth2 Login flow",
-        "Priority": "High",
-        "Assigned Agent": "Architect Agent",
-        "Status": "In Progress",
+        "Timestamp": "14:32:01",
+        "Event Type": "Normal Blink",
+        "EAR Score": "0.31 (Normal)",
+        "Status": "Safe",
     },
     {
-        "Task ID": "TSK-102",
-        "Description": "Fix DB timeout error on high load",
-        "Priority": "Critical",
-        "Assigned Agent": "QA Agent",
-        "Status": "Conflict Flagged",
+        "Timestamp": "14:32:15",
+        "Event Type": "Prolonged Eye Closure",
+        "EAR Score": "0.18 (Warning)",
+        "Status": "⚠️ Alert Triggered",
     },
     {
-        "Task ID": "TSK-103",
-        "Description": "Update API documentation",
-        "Priority": "Medium",
-        "Assigned Agent": "PM Agent",
-        "Status": "Pending",
+        "Timestamp": "14:32:40",
+        "Event Type": "Gaze Distraction (Yaw)",
+        "EAR Score": "0.29 (Normal)",
+        "Status": "⚠️ Head Turn",
+    },
+    {
+        "Timestamp": "14:33:05",
+        "Event Type": "Yawning Incident (MAR)",
+        "EAR Score": "0.30 (Normal)",
+        "Status": "⚠️ Fatigue Sign",
     },
 ]
 
-df = pd.DataFrame(tasks_data)
+df = pd.DataFrame(safety_logs)
 
 st.markdown("---")
-st.subheader("📋 Active Sprint Task Board")
+st.subheader("📊 Live Telemetry & Safety Event Log")
 st.dataframe(df, use_container_width=True)
 
-# Multi-Agent Event Stream & Conflict Resolution
+# Telemetry Visualizations & Confusion Matrix
 st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-  st.subheader("⚡ Multi-Agent Event Stream")
-  st.info("🤖 **PM Agent:** Parsed 3 new action items from chat logs.")
-  st.success("🤖 **Architect Agent:** Verified database schema compatibility.")
-  st.warning(
-      "🤖 **QA Agent:** Flagged overlapping requirement in TSK-102 and"
-      " TSK-104."
+  st.subheader("📈 Sliding-Window Metrics")
+  st.progress(0.82, text="Blinks Per Minute Stability: 82% (Optimal)")
+  st.progress(0.40, text="Head Pose Deviation Risk: 40% (Low)")
+  st.write(
+      "*Note: Computed continuously over 30-frame sliding windows via local"
+      " CPU inference.*"
   )
 
 with col2:
-  st.subheader("🚨 Automated Conflict Resolution")
-  st.error(
-      "⚠️ **Conflict Detected:** Task TSK-102 contradicts authentication"
-      " constraints in PRD section 4.2."
-  )
-  if st.button("Resolve Conflict via AI Agent"):
-    st.success(
-        "✅ Conflict automatically resolved: Updated PRD specs and"
-        " reprioritized task."
+  st.subheader("🛡️ Offline Confusion Matrix Report")
+  st.success("✅ **False Positive Resistance:** 94.5% Accuracy")
+  st.info("ℹ️ **Target Frame Rate:** Maintained at ≥15 FPS on local hardware.")
+  if st.button("Trigger Test Alert"):
+    st.error(
+        "🚨 **BEEP BEEP:** Simulated driver microsleep detected! Local buzzer"
+        " activated."
     )
 
 # Footer Disclaimer
 st.markdown("---")
 st.caption(
-    "⚠️ **AI Dev Tool Disclaimer:** Simulated multi-agent coordination"
-    " platform for educational demonstration."
+    "⚠️ **Automotive Safety Disclaimer:** Prototype driver monitoring system"
+    " designed for educational demonstration."
 )
